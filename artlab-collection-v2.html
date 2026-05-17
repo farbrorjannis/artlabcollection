@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ArtLab — Free Artist Tools | akvarellskiss.se</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #F5F5F0; font-family: Georgia, serif; color: #3E2723; }
+.al-wrap { max-width: 900px; margin: 0 auto; padding: 2rem 1rem 3rem; }
+.al-header { text-align: center; margin-bottom: 2rem; border-bottom: 1.5px solid #D7CCC8; padding-bottom: 1.5rem; }
+.al-logo { font-size: 11px; letter-spacing: 0.14em; color: #8D6E63; text-transform: uppercase; margin-bottom: 0.5rem; }
+.al-logo a { color: #8D6E63; text-decoration: none; }
+.al-logo a:hover { color: #4E342E; }
+.al-title { font-size: 2rem; font-weight: 400; color: #4E342E; margin-bottom: 0.4rem; }
+.al-subtitle { font-size: 1rem; color: #6D4C41; line-height: 1.6; max-width: 520px; margin: 0 auto; }
+.al-controls { display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center; }
+.al-search { flex: 1; min-width: 180px; padding: 9px 14px; border: 1px solid #D7CCC8; border-radius: 6px; background: #FAFAF8; font-size: 14px; color: #4E342E; outline: none; }
+.al-search:focus { border-color: #4E342E; }
+.al-sort { padding: 9px 14px; border: 1px solid #D7CCC8; border-radius: 6px; background: #FAFAF8; font-size: 14px; color: #4E342E; outline: none; cursor: pointer; }
+.al-count { font-size: 13px; color: #8D6E63; margin-left: auto; white-space: nowrap; }
+.al-section { margin-bottom: 2.5rem; }
+.al-section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem; }
+.al-section-title { font-size: 1.2rem; font-weight: 500; color: #4E342E; white-space: nowrap; }
+.al-section-line { flex: 1; height: 1px; background: #D7CCC8; }
+.al-section-badge { font-size: 11px; background: #D7CCC8; color: #5D4037; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.al-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+@media (max-width: 560px) { .al-grid { grid-template-columns: 1fr; } }
+.al-card { background: #FEFEFE; border: 1px solid #D7CCC8; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.2s; }
+.al-card:hover { border-color: #4E342E; }
+.al-marketing .al-card { border-left: 3px solid #D7CCC8; }
+.al-marketing .al-card:hover { border-color: #4E342E; border-left-color: #4E342E; }
+.al-card-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
+.al-placeholder { width: 100%; aspect-ratio: 1/1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+.al-placeholder-initials { font-size: 2.4rem; font-weight: 500; letter-spacing: 0.05em; }
+.al-placeholder-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.6; }
+.al-card-body { padding: 1rem 1.1rem 1.1rem; flex: 1; display: flex; flex-direction: column; gap: 0.4rem; }
+.al-card-title { font-size: 1rem; font-weight: 600; color: #4E342E; line-height: 1.3; }
+.al-card-desc { font-size: 13px; color: #6D4C41; line-height: 1.55; flex: 1; }
+.al-card-btn { display: inline-block; margin-top: 0.6rem; padding: 7px 16px; background: #4E342E; color: #F5F5F0; font-size: 13px; border-radius: 5px; text-decoration: none; transition: background 0.2s; align-self: flex-start; }
+.al-card-btn:hover { background: #3E2723; }
+.al-empty { color: #A1887F; font-size: 13px; padding: 1rem 0; font-style: italic; }
+.al-noresult { text-align: center; padding: 2rem; color: #8D6E63; font-size: 14px; }
+.al-footer { text-align: center; margin-top: 1rem; font-size: 12px; color: #A1887F; padding-top: 1rem; border-top: 1px solid #D7CCC8; }
+.al-footer a { color: #8D6E63; text-decoration: none; }
+.al-footer a:hover { color: #4E342E; }
+</style>
+
+<div class="al-wrap">
+  <div class="al-header">
+    <div class="al-logo"><a href="https://www.akvarellskiss.se">www.akvarellskiss.se</a></div>
+    <h1 class="al-title">ArtLab — Free Artist Tools</h1>
+    <p class="al-subtitle">A growing collection of free tools for artists and creatives. Explore, use, and share.</p>
+  </div>
+
+  <div class="al-controls">
+    <input class="al-search" id="al-search" type="search" placeholder="Search tools…" aria-label="Search tools" />
+    <select class="al-sort" id="al-sort" aria-label="Sort tools">
+      <option value="default">Default order</option>
+      <option value="alpha-asc">A → Z</option>
+      <option value="alpha-desc">Z → A</option>
+    </select>
+    <span class="al-count" id="al-count"></span>
+  </div>
+
+  <div id="al-main"></div>
+
+  <div class="al-footer">
+    Free tools for artists by <a href="https://www.akvarellskiss.se">akvarellskiss.se</a>
+    &nbsp;·&nbsp;
+    <a href="https://www.akvarellskiss.se">Explore more →</a>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   VERKTYGSLISTA — redigera här
+
+   title : Namn som visas på kortet
+   url   : Sidans fulla URL
+   desc  : Kort beskrivning (1–2 meningar)
+   img   : Bild-URL från WP mediabibliotek
+             Lämna '' så visas placeholder med initialer
+
+   ART-TOOLS — lägg till / ta bort / ändra ordning fritt
+   MARKETING-TOOLS — samma struktur, visas i egen sektion
+   ============================================================ */
+
+const ART_TOOLS = [
+  {
+    title: 'Painting Values Tool',
+    url:   'https://www.akvarellskiss.se/artlab-painting-values-tool/',
+    desc:  'Analyse and adjust the tonal values in your artwork to improve composition and depth.',
+    img:   ''
+  },
+  {
+    title: 'Color Harmony Palette',
+    url:   'https://www.akvarellskiss.se/color-harmony-palette/',
+    desc:  'Generate harmonious color palettes based on color theory principles.',
+    img:   ''
+  },
+  {
+    title: 'Pigment Database',
+    url:   'https://www.akvarellskiss.se/pigment-database/',
+    desc:  'Search and compare watercolor pigments, lightfastness ratings and properties.',
+    img:   ''
+  },
+  {
+    title: 'Perspective Tool',
+    url:   'https://www.akvarellskiss.se/perspective-tool/',
+    desc:  'Interactive guide to one- and two-point perspective for artists.',
+    img:   ''
+  },
+  {
+    title: 'Watercolor Granulation Tool',
+    url:   'https://www.akvarellskiss.se/watercolor-granulation-tool/',
+    desc:  'Explore how different pigments granulate on watercolor paper.',
+    img:   ''
+  },
+  {
+    title: 'Artist Mirror',
+    url:   'https://www.akvarellskiss.se/artist-mirror/',
+    desc:  'Flip your artwork digitally to spot composition errors and proportions.',
+    img:   ''
+  },
+  {
+    title: 'Watercolor Palette Extractor',
+    url:   'https://www.akvarellskiss.se/watercolor-palette-extractor/',
+    desc:  'Extract a color palette from any photo or painting.',
+    img:   ''
+  },
+  {
+    title: 'Art Composition Planner & Image Transfer Grid',
+    url:   'https://www.akvarellskiss.se/art-composition-planner-image-transfer-grid/',
+    desc:  'Plan your composition and generate a transfer grid for scaling your reference.',
+    img:   ''
+  },
+  {
+    title: 'Affordable Watercolor Paper',
+    url:   'https://www.akvarellskiss.se/prisvart-akvarellpapper/',
+    desc:  'Find and compare budget-friendly watercolor paper options.',
+    img:   ''
+  },
+  {
+    title: 'Watercolor Paper Price Calculator',
+    url:   'https://www.akvarellskiss.se/watercolor-paper-price-calculator/',
+    desc:  'Calculate and compare the cost per sheet for different watercolor paper brands.',
+    img:   ''
+  },
+  {
+    title: 'Image Editor for Artists',
+    url:   'https://www.akvarellskiss.se/image-editor-for-artists/',
+    desc:  'Simple image editing tools tailored for artists — crop, adjust and enhance.',
+    img:   ''
+  },
+  {
+    title: 'Certificate of Authenticity',
+    url:   'https://www.akvarellskiss.se/certificate-of-authenticity/',
+    desc:  'Generate a professional certificate of authenticity for your original artwork.',
+    img:   ''
+  },
+  {
+    title: 'Artist Signature Tool',
+    url:   'https://www.akvarellskiss.se/artist-signature-tool/',
+    desc:  'Design and preview your artist signature in different styles.',
+    img:   ''
+  },
+  {
+    title: 'Artists Exhibition Companion',
+    url:   'https://www.akvarellskiss.se/artists-exhibition-companion/',
+    desc:  'Plan and manage your art exhibition — checklist, layout and labels.',
+    img:   ''
+  },
+  {
+    title: 'Exhibition Assistant (svenska)',
+    url:   'https://www.akvarellskiss.se/utstallningsassistenten/',
+    desc:  'Planera din konstutställning med checklista, layout och etiketter.',
+    img:   ''
+  },
+];
+
+const MARKETING_TOOLS = [
+  {
+    title: 'Art Pricing Calculator',
+    url:   'https://www.akvarellskiss.se/art-pricing-calculator/',
+    desc:  'Calculate a fair price for your artwork based on size, time and materials.',
+    img:   ''
+  },
+  {
+    title: 'Art Pricing Guide (svenska)',
+    url:   'https://www.akvarellskiss.se/prissattning-konstverk/',
+    desc:  'Guide för att sätta rätt pris på dina konstverk.',
+    img:   ''
+  },
+  {
+    title: 'Mockup Generator',
+    url:   'https://www.akvarellskiss.se/mockup-generator/',
+    desc:  'Place your artwork in realistic room mockups for portfolio and social media.',
+    img:   ''
+  },
+  {
+    title: 'Social Media Art Formatting Guide',
+    url:   'https://www.akvarellskiss.se/social-media-art-formatting-guide/',
+    desc:  'Optimal image sizes and formats for every social media platform.',
+    img:   ''
+  },
+  {
+    title: 'Alt Text Generator for Artists',
+    url:   'https://www.akvarellskiss.se/alt-text-generator-artists/',
+    desc:  'Generate SEO-friendly alt text descriptions for your artwork images.',
+    img:   ''
+  },
+  {
+    title: 'SEO Audit Tool for Artists',
+    url:   'https://www.akvarellskiss.se/seo-audit-tool-for-artists/',
+    desc:  'Audit your artist website for SEO improvements and visibility.',
+    img:   ''
+  },
+  {
+    title: 'SEO Score Dashboard',
+    url:   'https://www.akvarellskiss.se/seo-score-dashboard/',
+    desc:  'Track and visualise your website SEO score over time.',
+    img:   ''
+  },
+  {
+    title: 'Copyright Watermark for Artists',
+    url:   'https://www.akvarellskiss.se/copyright-watermark-for-artists/',
+    desc:  'Add a professional copyright watermark to protect your artwork online.',
+    img:   ''
+  },
+  {
+    title: 'Sell Your Art Online',
+    url:   'https://www.akvarellskiss.se/sell-your-art-online/',
+    desc:  'Guide and tools to help you start selling your art online.',
+    img:   ''
+  },
+  {
+    title: 'Exhibition Assistant (svenska)',
+    url:   'https://www.akvarellskiss.se/utstallningasassistent/',
+    desc:  'Marknadsför din utställning med rätt verktyg och strategi.',
+    img:   ''
+  },
+];
+
+/* ============================================================
+   REDIGERA INTE NEDAN — detta är logiken
+   ============================================================ */
+
+const PLACEHOLDER_COLORS = [
+  { bg: '#EDE0D4', text: '#5D4037' },
+  { bg: '#D7CCC8', text: '#4E342E' },
+  { bg: '#BCAAA4', text: '#3E2723' },
+  { bg: '#E8D5C4', text: '#6D4C41' },
+  { bg: '#F0E6DC', text: '#5D4037' },
+  { bg: '#C8B8B0', text: '#3E2723' },
+];
+
+function getInitials(title) {
+  const skip = ['for','the','a','an','of','in','to','and','your'];
+  const words = title.trim().split(/\s+/).filter(w => !skip.includes(w.toLowerCase()));
+  if (!words.length) return '??';
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+}
+
+function getColor(title) {
+  let h = 0;
+  for (let i = 0; i < title.length; i++) h = title.charCodeAt(i) + ((h << 5) - h);
+  return PLACEHOLDER_COLORS[Math.abs(h) % PLACEHOLDER_COLORS.length];
+}
+
+function truncate(str, n) {
+  str = (str || '').trim();
+  return str.length > n ? str.slice(0, n).trimEnd() + '…' : str;
+}
+
+function buildCard(t) {
+  const desc = truncate(t.desc, 110);
+  let imgHtml;
+  if (t.img) {
+    imgHtml = `<img class="al-card-img" src="${t.img}" alt="${t.title}" loading="lazy" />`;
+  } else {
+    const col = getColor(t.title);
+    imgHtml = `<div class="al-placeholder" style="background:${col.bg};color:${col.text}">
+      <span class="al-placeholder-initials">${getInitials(t.title)}</span>
+      <span class="al-placeholder-label">ArtLab Tool</span>
+    </div>`;
+  }
+  return `<div class="al-card">
+    ${imgHtml}
+    <div class="al-card-body">
+      <div class="al-card-title">${t.title}</div>
+      ${desc ? `<div class="al-card-desc">${desc}</div>` : ''}
+      <a class="al-card-btn" href="${t.url}" target="_blank" rel="noopener">Open tool →</a>
+    </div>
+  </div>`;
+}
+
+function sortList(list, method) {
+  const copy = [...list];
+  if (method === 'alpha-asc') copy.sort((a,b) => a.title.localeCompare(b.title));
+  if (method === 'alpha-desc') copy.sort((a,b) => b.title.localeCompare(a.title));
+  return copy;
+}
+
+function renderSection(list, label, isMarketing) {
+  if (!list.length) return '';
+  const cls = isMarketing ? 'al-section al-marketing' : 'al-section';
+  return `<div class="${cls}">
+    <div class="al-section-header">
+      <span class="al-section-title">${label}</span>
+      <div class="al-section-line"></div>
+      <span class="al-section-badge">${list.length} ${list.length === 1 ? 'tool' : 'tools'}</span>
+    </div>
+    <div class="al-grid">${list.map(buildCard).join('')}</div>
+  </div>`;
+}
+
+function render() {
+  const q = document.getElementById('al-search').value.toLowerCase();
+  const sort = document.getElementById('al-sort').value;
+
+  const filterFn = t => !q || t.title.toLowerCase().includes(q) || (t.desc||'').toLowerCase().includes(q);
+
+  const art = sortList(ART_TOOLS.filter(filterFn), sort);
+  const mkt = sortList(MARKETING_TOOLS.filter(filterFn), sort);
+  const total = art.length + mkt.length;
+
+  document.getElementById('al-count').textContent = total
+    ? total + (total === 1 ? ' tool' : ' tools') : '';
+
+  const html = renderSection(art, 'Art Tools', false)
+             + renderSection(mkt, 'Marketing Tools', true);
+
+  document.getElementById('al-main').innerHTML = html
+    || '<div class="al-noresult">No tools found matching your search.</div>';
+}
+
+document.getElementById('al-search').addEventListener('input', render);
+document.getElementById('al-sort').addEventListener('change', render);
+render();
+</script>
